@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Sign-In</title>
+
+    <!-- CSS only -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+
+</head>
+<body class="container">
+
+    <div class="row mt-5">
+        <div class="col-sm-6">
+
+            <h1>Google Sign-In</h1>
+            <hr>
+
+            <div id="g_id_onload"
+                data-client_id="304934559568-g1dk4v80jii1vi55bmfom028frf1icg6.apps.googleusercontent.com"
+                data-auto_prompt="false"
+                data-callback="handleCredentialResponse">
+            </div>
+            <div class="g_id_signin"
+                data-type="standard"
+                data-size="large"
+                data-theme="outline"
+                data-text="sign_in_with"
+                data-shape="rectangular"
+                data-logo_alignment="left">
+            </div>
+
+            <br>
+
+            <button id="google_signout">
+                Sign-Out
+            </button>
+
+        </div>
+
+        <div class="col-sm-6">
+
+            <h1>Login Manual</h1>
+            <hr>
+
+            <form class="d-grid"> <!-- d-grid alarga el boton-->
+
+                <input type="text" name="correo" class="form-control mb-2" placeholder="correo">
+                <input type="text" name="password" class="form-control mb-2" placeholder="password">
+
+                <button type="submit" class="btn btn-primary">
+                Ingresar
+                </button>
+
+            </form>
+
+        </div>
+    </div>
+
+    <!-- <script>
+        function handleCredentialResponse(response) {
+           // decodeJwtResponse() is a custom function defined by you
+           // to decode the credential response.
+           // esto es lo que recomienda google, pero yo no quiero decodificar el token
+           const responsePayload = decodeJwtResponse(response.credential);
+      
+           console.log("ID: " + responsePayload.sub);
+           console.log('Full Name: ' + responsePayload.name);
+           console.log('Given Name: ' + responsePayload.given_name);
+           console.log('Family Name: ' + responsePayload.family_name);
+           console.log("Image URL: " + responsePayload.picture);
+           console.log("Email: " + responsePayload.email);
+        }
+    </script>
+    -->
+
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script src="./js/auth.js"></script>
+    
+</body>
+</html>
+
+<!-- datos de sacados desde:
+    https://developers.google.com/identity/gsi/web/guides/display-button
+
+    https://developers.google.com/identity/gsi/web/guides/handle-credential-responses-js-functions  
+-->
