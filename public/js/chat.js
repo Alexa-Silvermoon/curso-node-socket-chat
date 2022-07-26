@@ -5,12 +5,16 @@ const url = (window.location.hostname.includes('localhost') )
 
 let usuario = null;
 let socket = null;
+const arrayMsg = []; // solo para mensaje privados
+const idsPrivados = []; // solo para mensaje privados
+let nombrePropio; // solo para mensaje privados
 
 // Referencias HTML:
 const txtUid     = document.querySelector('#txtUid');
 const txtMensaje = document.querySelector('#txtMensaje');
 const ulUsuarios = document.querySelector('#ulUsuarios');
 const ulMensajes = document.querySelector('#ulMensajes');
+const ulMensajesPrivados = document.querySelector('#ulMensajesPrivados');
 const btnSalir   = document.querySelector('#btnSalir');
 
 // Validar el token del LocalStorage
@@ -78,12 +82,21 @@ const conectarSocket = async() => {
 
     socket.on('usuarios-activos', dibujarUsuarios );
 
-    socket.on('mensaje-privado', ( payload) => {
+    // socket.on('mensaje-privado', ( payload) => { //mensaje privado en consola
 
-        console.log('Privado: ', payload );
+    //     console.log('Privado: ', payload );
         
-    });
+    // });
 
+    socket.on('mensaje-privado', dibujarMensajesPrivados );
+
+}
+
+const uidPrivado = (uid) => {
+
+    idsPrivados.unshift(uid);
+
+    return uid;
 }
 
 const dibujarUsuarios = ( usuarios = [] ) => {
@@ -134,6 +147,38 @@ const dibujarMensajes = ( mensajes = [] ) => {
     });
 
     ulMensajes.innerHTML = mensajesHTML;
+
+    // <h5 class="text-success"> ${ nombre }</h5> nombre aparece en texto verde
+    // <span class="fs-6 text-muted">${ uid }</span> id del usuario en texto gris
+
+}
+
+const dibujarMensajesPrivados = ( mensajes ) => {
+
+    // const { usuario, mensaje } = payload;
+
+    // Nombre de usuario conectado personal
+    socket.on('nombre-propio', (name) => { nombrePropio = name });
+
+    let mensajesHTML = '';
+
+    // let arrayMsg = [];
+
+    arrayMsg.unshift(mensajes);
+
+    arrayMsg.forEach(({ destinatario, nombre, mensaje }) => {
+        mensajesHTML += `
+            <p class="m-3 msgdynamic">
+                <span>De <span class="text-primary">${mensaje === nombrePropio ? 'mi' : mensaje}</span> para 
+                <span class="text-primary">${destinatario === nombrePropio ? 'mi' : destinatario}</span>: </span>
+                <br/>
+                <p class="bg-primary bg-opacity-25 msg">${nombre}</p>
+            </p>
+            <hr/>
+        `;
+    })
+
+    ulMensajesPrivados.innerHTML = mensajesHTML;
 
     // <h5 class="text-success"> ${ nombre }</h5> nombre aparece en texto verde
     // <span class="fs-6 text-muted">${ uid }</span> id del usuario en texto gris
